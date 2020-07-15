@@ -16,6 +16,12 @@ public class Numerologist {
 		lf.printLifeCode();
 	}
 	
+	// Branch Refactor
+	// Branch Refactor
+	// Branch Refactor
+	// Branch Refactor
+	// Branch Refactor
+	
 	long age() {
 		LocalDate currentDate = LocalDate.now();
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
