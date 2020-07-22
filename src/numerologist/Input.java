@@ -1,61 +1,31 @@
 package numerologist;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Input {
-	private Scanner scanner = new Scanner(System.in);
-	private static String dateOfBirthString;
-	private Calendar dateOfBirth;
-	public static int count;
+
+	private LocalDate dateOfBirth;
 	
 	public Input() {
-		readDate();
-	}
-	void readDate() {
-		
-		System.out.println("Введите дату рождения в формате (дд.мм.гггг) ");
-		String input = null;
-		boolean checkInput = false;
-		while (!checkInput) {
-			input = scanner.nextLine();
-			checkInput = input.matches("\\d{2}\\.\\d{2}\\.\\d{4}");
-			if (!checkInput) {
-				System.out.println("Wrong input! Try again");
-			}
-		}
-		scanner.close();
-		dateOfBirthString = input;
 		setDateOfBirth();
-		}
-
-	public static String getDateOfBirthString() {
-		return dateOfBirthString;
 	}
+
 	private void setDateOfBirth() {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		System.out.println("Введите дату рождения в формате (дд.мм.гггг):");
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(System.in);
 		try {
-		Date date = sdf.parse(dateOfBirthString);
-		dateOfBirth = Calendar.getInstance();
-		dateOfBirth.setTime(date);
-		} catch(ParseException e) {
-			System.out.println("Некорректная дата");
-		}	
+			this.dateOfBirth = LocalDate.parse(scanner.nextLine(), DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+		} catch (Exception e) {
+			System.out.println("Wrong input!");
+			System.out.println(e.fillInStackTrace().getMessage());
+		}
 	}
-	
-	public Calendar getDateOfBirth() {
-		return dateOfBirth;
 
-	}
-	public static void main(String[] args) {
-		Input in = new Input();
-		in.readDate();
-		System.out.println(Input.getDateOfBirthString());
-		System.out.println(in.getDateOfBirth().getTime());
-		
+	LocalDate getDateOfBirth() {
+		return dateOfBirth;
 	}
 
 }

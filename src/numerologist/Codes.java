@@ -1,47 +1,79 @@
 package numerologist;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.List;
 
 public class Codes {
-
 	public static final int HOURS_23 = 23;
 	public static final int LUNAR_DAYS_28 = 28;
 	public static final int DAYS_33 = 33;
+	private List<Integer> yearCode;
+	private List<Integer> monthCode;
+	private Integer dayCode;
+	private LocalDate dateOfBirth;
+	private Data data;
+	
 
-	public Codes() throws IOException {
+	public Codes(LocalDate dateOfBirth, Data data) {
+		this.dateOfBirth = dateOfBirth;
+		this.data = data;
+		setYearCode();
+		setMonthCode();
+		setDayCode();
 	}
 
-	private Map<Integer, ArrayList<Integer>> years = Mapper.getMapInt("years.xls");
-	private Map<Integer, ArrayList<Integer>> months = Mapper.getMapInt("months.xls");
-	private DateInInt dateInInt = new DateInInt();
-
-	public ArrayList<Integer> getYearCode() {
-		return years.get(dateInInt.getYearOfBirth());
+	private void setYearCode() {
+		this.yearCode = data.getCodesYears().get(dateOfBirth.getYear());
 	}
 
-	public ArrayList<Integer> getMonthCode() {
-		boolean leap = DateInInt.getCalendarBirthDay().getActualMaximum(Calendar.DAY_OF_MONTH) == 29;
-		if (leap) {
-			return months.get(229);
+	private void setMonthCode() {
+		if (dateOfBirth.lengthOfMonth() == 29) {
+			this.monthCode = data.getCodesMonths().get(229);
 		} else {
-			return months.get(dateInInt.getMonthOfBirth());
+			this.monthCode = data.getCodesMonths().get(dateOfBirth.getMonthValue());
 		}
+	}
+
+	private void setDayCode() {
+		this.dayCode = dateOfBirth.lengthOfMonth() - dateOfBirth.getDayOfMonth();
 
 	}
 
-	public int getDayCode() {
-		return DateInInt.getCalendarBirthDay().getActualMaximum(Calendar.DAY_OF_MONTH) - dateInInt.getDayOfBirth();
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append(String.format("%15s = ", "Константы"))
+				.append(String.format("|%2d|%2d|%2d|\n", HOURS_23, LUNAR_DAYS_28, DAYS_33))
+				.append(String.format("%15s = ", "Код года (" + dateOfBirth.getYear() + ")"));
+		for (Integer x : yearCode) {
+			result.append(String.format("|%2d", x));
+		}
+		result.append("|\n").append(String.format("%15s = ", "Код месяца (" + dateOfBirth.getMonthValue() + ")"));
+		for (Integer x : monthCode) {
+			result.append(String.format("|%2d", x));
+		}
+		result.append("|\n").append(String.format("%15s = ", "Код дня (" + dateOfBirth.getDayOfMonth() + ")"))
+				.append(String.format("|%2d|%2d|%2d|\n", dayCode, dayCode, dayCode));
+		return result.toString();
+
 	}
 
-	public static void main(String[] args) throws IOException {
-		Codes codes = new Codes();
-		System.out.println(codes.getYearCode());
-		System.out.println(codes.getMonthCode());
-		System.out.println(codes.getDayCode());
-		System.out.println("Расчёт произведён для даты " + DateInInt.getCalendarBirthDay().getTime());
+	public List<Integer> getYearCode() {
+		return yearCode;
+	}
+
+	public List<Integer> getMonthCode() {
+		return monthCode;
+	}
+
+	public Integer getDayCode() {
+		return dayCode;
+	}
+
+	public static void main(String[] args) {
+		Data data = Data.createData();
+		Codes codes = new Codes(LocalDate.of(1914, 12, 31), data);
+		System.out.println(codes.toString());
+		System.out.println("program continue");
 
 	}
 

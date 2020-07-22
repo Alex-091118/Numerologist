@@ -1,15 +1,22 @@
 package numerologist;
 
-import java.io.IOException;
-
 public class ChakrasAnalyze {
 
-	String chakrasToString;
-	
+	private Chakras chakras;
+	private int yan;
+	private int in;
+	private int logic;
+	private int intuition;
+	private int sp;
+	private int iCan;
+	private int iWant;
+
 	public ChakrasAnalyze(Chakras chakras) {
-		chakrasToString = chakras.getChakrasToString();
+		this.chakras = chakras;
+		setFields();
 	}
-	int[] toIntArray(String chakra) {
+
+	private int[] toIntArray(String chakra) {
 		String[] array = chakra.split("-");
 		int[] arrayInt = new int[array.length];
 		for (int i = 0; i < array.length; i++) {
@@ -17,55 +24,65 @@ public class ChakrasAnalyze {
 		}
 		return arrayInt;
 	}
-	
-	void printChakrAnalyze() {
-		int [] chakrArr = toIntArray(chakrasToString);
-		int yan = chakrArr[1] + chakrArr[2] + chakrArr[3];
-		int in = chakrArr[0] + chakrArr[4] + chakrArr[5];
-		int logic = chakrArr[3] + chakrArr[5];
-		int intuition = chakrArr[2] + chakrArr[4];
-		int sp;
-		if (yan > in) {
-			sp = (yan - in) * chakrArr[1]; 
-		} else if (yan < in) {
-			sp = (in - yan) * chakrArr[1];
-		} else {
-			sp = yan * chakrArr[1]; 
-		}
-		int iCan = chakrArr[0];
-		int iWant;
-		if (yan > in) {
-			iWant = yan - in; 
-		} else if (yan < in) {
-			iWant = in - yan;
-		} else {
-			iWant = yan; 
-		}
-		System.out.println();
-		System.out.println("ЯНЬ: " + yan);
-		System.out.println("ИНЬ: " + in);
-		System.out.println("Логика: " + logic);
-		System.out.println("Интуиция: " + intuition);
-		System.out.println("СП: " + sp);
-		System.out.println("Хочу: " + iWant + " Могу: " + iCan);
-	}
-	
-	
-	
-	public static void main(String[] args) throws IOException {
 
-		Chakras chakras = new Chakras();
-		System.out.println("Чакры: " + chakras.getChakrasToString());
-		System.out.println(chakras.descriptionChak());
-		
-		LifeCode lf = new LifeCode();
-		System.out.println(lf.calcTopPartLifeCode());
-		System.out.println(" " + lf.calcTypology());
-		System.out.println(lf.calcBottomPartLifeCode());
-		
-		ChakrasAnalyze ca = new ChakrasAnalyze(chakras);
-		ca.printChakrAnalyze();
-		System.out.println("Расчёт произведён для даты " + DateInInt.getCalendarBirthDay().getTime());
+	private void setFields() {
+		int[] chakrArr = toIntArray(chakras.getChakras());
+		yan = chakrArr[1] + chakrArr[2] + chakrArr[3];
+		in = chakrArr[0] + chakrArr[4] + chakrArr[5];
+		logic = chakrArr[3] + chakrArr[5];
+		intuition = chakrArr[2] + chakrArr[4];
+		if (yan == in) {
+			sp = yan * chakrArr[1];
+		} else {
+			sp = Math.abs(yan - in) * chakrArr[1];
+		}
+		iCan = chakrArr[0];
+		if (yan == in) {
+			iWant = yan;
+		} else {
+			iWant = Math.abs(yan - in);
+		}
 	}
+	
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("\nЯНЬ: ").append(yan).append("\n")
+				.append("ИНЬ: ").append(in).append("\n")
+				.append("Логика: ").append(logic).append("\n")
+				.append("Интуиция: ").append(intuition).append("\n")
+				.append("СП: ").append(sp).append("\n")
+				.append("Хочу: ").append(iWant).append(" Могу: ").append(iCan).append("\n");
+		return result.toString();
+	}
+
+	public int getYan() {
+		return yan;
+	}
+
+	public int getIn() {
+		return in;
+	}
+
+	public int getLogic() {
+		return logic;
+	}
+
+	public int getIntuition() {
+		return intuition;
+	}
+
+	public int getSp() {
+		return sp;
+	}
+
+	public int getiCan() {
+		return iCan;
+	}
+
+	public int getiWant() {
+		return iWant;
+	}
+
+
 
 }

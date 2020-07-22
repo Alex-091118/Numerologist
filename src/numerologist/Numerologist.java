@@ -1,36 +1,53 @@
 package numerologist;
 
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Numerologist {
-	void start() throws IOException {
-		Chakras chakras = new Chakras();
-		LifeCode lf = new LifeCode();
-		ChakrasAnalyze ca = new ChakrasAnalyze(chakras);
-		System.out.println("Возраст: " + age());
-		chakras.printChakras();
-		ca.printChakrAnalyze();
-		lf.printLifeCode();
-	}
+	static Data data = Data.createData();
 	
-	// Branch Refactor
-	// Branch Refactor
-	// Branch Refactor
-	// Branch Refactor
-	// Branch Refactor
-	
-	long age() {
-		LocalDate currentDate = LocalDate.now();
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-		LocalDate birthDay = LocalDate.parse(Input.getDateOfBirthString(), dtf);
-		return ChronoUnit.YEARS.between(birthDay, currentDate);
+	static void calculationFromInput() {
+		while(true) {
+			LocalDate dateOfBirth = new Input().getDateOfBirth();
+			if (dateOfBirth != null) {
+				NumerologicalCalculation nc = new NumerologicalCalculation(dateOfBirth, data);
+				System.out.println(nc.toString());
+			}
+		}
 	}
-public static void main(String[] args) throws IOException {
-	Numerologist num = new Numerologist();
-	num.start();
+
+	static void findMaxSP() {
+		LocalDate dateOfBirth = LocalDate.of(1900, 01, 01);
+		List<NumerologicalCalculation> listCalc = new ArrayList<>();
+		int maxSP = 0;
+		try {
+			while (!dateOfBirth.equals(LocalDate.of(2151, 12, 31))) {
+				NumerologicalCalculation nc = new NumerologicalCalculation(dateOfBirth, data);
+				listCalc.add(nc);
+				int sp = nc.getChakrasAnalyze().getSp();
+				if (sp > maxSP) {
+					maxSP = sp;
+				}
+				dateOfBirth = dateOfBirth.plusDays(1);
+			}
+		} catch (NullPointerException e) {
+			System.out.println(dateOfBirth);
+			e.printStackTrace();
+		}
+		System.out.println(maxSP);
+		for (NumerologicalCalculation numc : listCalc) {
+			if (numc.getChakrasAnalyze().getSp() == maxSP) {
+				System.out.println(numc.toString());
+				//System.out.println(numc.getDateOfBirth());
+			}
+		}
+	}
+
+	public static void main(String[] args) {
+		Numerologist.calculationFromInput();
+		//Numerologist.findMaxSP();
+
 	}
 
 }

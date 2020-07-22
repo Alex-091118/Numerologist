@@ -1,73 +1,75 @@
 package numerologist;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.List;
 
 public class Chakras {
 
-	private Map<Integer, ArrayList<String>> physicalCont = Mapper.getMapString("fk.xls");
-	private Map<Integer, ArrayList<String>> emotionCont = Mapper.getMapString("ek.xls");
-	private Map<Integer, ArrayList<String>> intellectCont = Mapper.getMapString("ik.xls");
-	private Map<String, ArrayList<String>> mapT3 = Mapper.getMapT3("t3.xls");
+	private String chakras;
+	private Markers markers;
+	private Data data;
+	private List<String> chakraPhysCont;
+	private List<String> chakraEmotCont;
+	private List<String> chakraIntelCont;
+	private List<String> table3;
 
-	Markers markers = new Markers();
+	public Chakras(Markers markers, Data data) {
+		this.markers = markers;
+		this.data = data;
+		setChakraPhysCont();
+		setChakraEmotCont();
+		setChakraIntelCont();
+		setChakras();
+		setTable3();
 
-	public Chakras() throws IOException {
 	}
 
-	String t3() {
-		String result = "";
+	private void setChakraPhysCont() {
+		this.chakraIntelCont = data.getIntellectCont().get(markers.getMarkerIntelCont());
+
+	}
+
+	private void setChakraEmotCont() {
+		this.chakraEmotCont = data.getEmotionCont().get(markers.getMarkerEmotCont());
+
+	}
+
+	private void setTable3() {
 		boolean stop = false;
-		for (String x : mapT3.keySet()) {
-			String[] arr = x.split(",");
-			for (String s : arr) {
-				if (s.equals(Integer.toString(markers.getMarkerEK()))) {
-					result = "Эмоциональный тип реактивности: " + mapT3.get(x).get(0) + "\nЯ - " + mapT3.get(x).get(1)
-							+ " Мы - " + mapT3.get(x).get(2);
+		for (String key : data.getMapT3().keySet()) {
+			for (String marker : key.split(",")) {
+				if (marker.equals(Integer.toString(markers.getMarkerEmotCont()))) {
+					this.table3 = data.getMapT3().get(key);
 					stop = true;
+					break;
 				}
 			}
-			if (stop) {
+			if (stop)
 				break;
-			}
 		}
+	}
 
-		return result;
+	private void setChakraIntelCont() {
+		this.chakraPhysCont = data.getPhysicalCont().get(markers.getMarkerPhysCont());
 
 	}
 
-	String getChakrasToString() {
-		return physicalCont.get(markers.getMarkerFK()).get(0) + "-" + emotionCont.get(markers.getMarkerEK()).get(0)
-				+ "-" + intellectCont.get(markers.getMarkerIK()).get(0);
+	private void setChakras() {
+		this.chakras = chakraPhysCont.get(0) + "-" + chakraEmotCont.get(0) + "-" + chakraIntelCont.get(0);
 	}
 
-	String descriptionChak() {
-		String fkCh = physicalCont.get(markers.getMarkerFK()).get(0);
-		String ekCh = emotionCont.get(markers.getMarkerEK()).get(0);
-		String ikCh = intellectCont.get(markers.getMarkerIK()).get(0);
-		String fk = physicalCont.get(markers.getMarkerFK()).get(1);
-		String ek = emotionCont.get(markers.getMarkerEK()).get(1);
-		String ik = intellectCont.get(markers.getMarkerIK()).get(1);
-		return "Физический контур: " + fkCh + " " + fk + "\nЭмоциональный контур: " + ekCh + " " + ek
-				+ "\nИнтеллектуальный контур: " + ikCh + " " + ik;
+	public String getChakras() {
+		return chakras;
 	}
 
-	void printChakras() {
-		System.out.println("Чакры: " + getChakrasToString());
-		System.out.println(descriptionChak());
-		System.out.println(t3());
-	}
-
-	public static void main(String[] args) throws IOException {
-
-		Chakras chakras = new Chakras();
-		System.out.println("Чакры: " + chakras.getChakrasToString());
-		System.out.println(chakras.descriptionChak());
-	
-		System.out.println(chakras.t3());
-		System.out.println("Расчёт произведён для даты " + DateInInt.getCalendarBirthDay().getTime());
-
+	public String toString() {
+		StringBuilder result = new StringBuilder();
+		result.append("\nЧакры: " + getChakras())
+				.append("\nФизический контур: ").append(chakraPhysCont.get(0)).append(" ").append(chakraPhysCont.get(1))
+				.append("\nЭмоциональный контур: ").append(chakraEmotCont.get(0)).append(" ").append(chakraEmotCont.get(1))
+				.append("\nИнтеллектуальный контур: ").append(chakraIntelCont.get(0)).append(" ").append(chakraIntelCont.get(1))
+				.append("\nЭмоциональный тип реактивности: ").append(table3.get(0))
+				.append("\nЯ - ").append(table3.get(1)).append(" Мы - ").append(table3.get(2)).append("\n");
+		return result.toString();
 	}
 
 }
