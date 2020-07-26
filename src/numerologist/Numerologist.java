@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import data.Data;
+
 public class Numerologist {
 	static Data data = Data.createData();
 	

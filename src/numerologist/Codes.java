@@ -3,6 +3,8 @@ package numerologist;
 import java.time.LocalDate;
 import java.util.List;
 
+import data.Data;
+
 public class Codes {
 	public static final int HOURS_23 = 23;
 	public static final int LUNAR_DAYS_28 = 28;

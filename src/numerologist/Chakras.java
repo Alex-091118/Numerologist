@@ -2,6 +2,8 @@ package numerologist;
 
 import java.util.List;
 
+import data.Data;
+
 public class Chakras {
 
 	private String chakras;
