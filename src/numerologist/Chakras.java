@@ -58,6 +58,12 @@ public class Chakras {
 	private void setChakras() {
 		this.chakras = chakraPhysCont.get(0) + "-" + chakraEmotCont.get(0) + "-" + chakraIntelCont.get(0);
 	}
+	
+	private String contourDescription(List<String> chakraContour) {
+		String typeCont = chakraContour.get(1);
+		String description = data.getContourDescriptions().get(typeCont);
+		return description.trim();
+	}
 
 	public String getChakras() {
 		return chakras;
@@ -65,10 +71,13 @@ public class Chakras {
 
 	public String toString() {
 		StringBuilder result = new StringBuilder();
-		result.append("\nЧакры: " + getChakras())
+		result.append("\nЧакры: " + getChakras()).append("\n")
 				.append("\nФизический контур: ").append(chakraPhysCont.get(0)).append(" ").append(chakraPhysCont.get(1))
+				.append("\n").append(contourDescription(chakraPhysCont)).append("\n")
 				.append("\nЭмоциональный контур: ").append(chakraEmotCont.get(0)).append(" ").append(chakraEmotCont.get(1))
+				.append("\n").append(contourDescription(chakraEmotCont)).append("\n")
 				.append("\nИнтеллектуальный контур: ").append(chakraIntelCont.get(0)).append(" ").append(chakraIntelCont.get(1))
+				.append("\n").append(contourDescription(chakraIntelCont)).append("\n")
 				.append("\nЭмоциональный тип реактивности: ").append(table3.get(0))
 				.append("\nЯ - ").append(table3.get(1)).append(" Мы - ").append(table3.get(2)).append("\n");
 		return result.toString();

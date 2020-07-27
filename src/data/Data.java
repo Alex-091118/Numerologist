@@ -24,6 +24,7 @@ public class Data implements Serializable {
 	private Map<Integer, ArrayList<String>> emotionCont;
 	private Map<Integer, ArrayList<String>> intellectCont;
 	private Map<String, ArrayList<String>> mapT3;
+	private Map<String, String> contourDescriptions;
 
 	private Data() {
 		serializationData();
@@ -54,6 +55,7 @@ public class Data implements Serializable {
 			emotionCont = Mapper.getMapString("resources\\ek.xls");
 			intellectCont = Mapper.getMapString("resources\\ik.xls");
 			mapT3 = Mapper.getMapT3("resources\\t3.xls");
+			contourDescriptions = Mapper.readContourDescription("resources\\ContourDescriptions.txt");
 		} catch (EncryptedDocumentException | IOException e) {
 			e.fillInStackTrace().getMessage();
 		}
@@ -95,7 +97,8 @@ public class Data implements Serializable {
 				.append("\nPhysical contour (физический контур)\n").append(printColumnMap(physicalCont, 1, 3, -40))
 				.append("\nEmotional contour (эмоциональный контур)\n").append(printColumnMap(emotionCont, 1, 3, -40))
 				.append("\nIntelligent contour (интеллектуальный контур)\n").append(printColumnMap(intellectCont, 1, 3, -40))
-				.append("\nTable 3\n").append(printColumnMap(mapT3, 1, 25, -50));
+				.append("\nTable 3\n").append(printColumnMap(mapT3, 1, 25, -50))
+				.append("Contour description\n").append(printColumnMap(contourDescriptions, 1, -30, 1));
 		return allInfo.toString();
 	}
 
@@ -121,6 +124,10 @@ public class Data implements Serializable {
 
 	public Map<String, ArrayList<String>> getMapT3() {
 		return mapT3;
+	}
+
+	public Map<String, String> getContourDescriptions() {
+		return contourDescriptions;
 	}
 
 	public static void main(String[] args) {
